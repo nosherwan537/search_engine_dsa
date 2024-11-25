@@ -1,0 +1,17 @@
+# Ignore the virtual environment
+env/
+medium_articles.csv
+
+# Ignore Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore the pickle files
+*.pkl
+
+# Ignore other system-specific or IDE-specific files
+.DS_Store  # macOS
+*.log
+.idea/      # PyCharm, IntelliJ
+.vscode/    # VS Code
