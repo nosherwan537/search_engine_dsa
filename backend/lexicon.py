@@ -1,4 +1,6 @@
 import pickle
+import pandas as pd
+import numpy as np
 
 with open('cleaned_texts.pkl','rb') as f:
     cleaned_texts=pickle.load(f)

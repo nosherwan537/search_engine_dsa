@@ -8,7 +8,7 @@ nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('punkt_tab')
 
-df=pd.read_csv('../medium_articles.csv')
+df=pd.read_csv(r'C:\Users\D E L L\Documents\search_engine\medium_articles.csv')
 texts=df['text'].fillna("").tolist()
 
 def clean_text(text):
