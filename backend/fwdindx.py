@@ -1,7 +1,7 @@
 import pandas as pd
 import pickle
-allDocs = pd.read_pickle(r"C:\Users\D E L L\Documents\search_engine\cleaned_texts.pkl")             # list of tuples [<tuple(docID,<list>words)>]
-lexicon = pd.read_pickle(r"C:\Users\D E L L\Documents\search_engine\lexicon.pkl")                   # dictionary {word:wordID}
+allDocs = pd.read_pickle("../cleaned_texts.pkl")             # list of tuples [<tuple(docID,<list>words)>]
+lexicon = pd.read_pickle("lexicon.pkl")                   # dictionary {word:wordID}
 def encode_hitlist(isAnchor, pos):
     encoded = (isAnchor << 12) | (pos & 0xFFF)
     return bin(encoded)[2:].zfill(13)  # 13 bits (12 for pos, 1 for isAnchor)

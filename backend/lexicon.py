@@ -1,15 +1,13 @@
 import pickle
-import pandas as pd
-import numpy as np
 
-with open('cleaned_texts.pkl','rb') as f:
+with open('../cleaned_texts.pkl','rb') as f:
     cleaned_texts=pickle.load(f)
 
 def build_lexicon(texts):
     lexicon={}
     wordID=0
-    for docID,pos_word in cleaned_texts:
-        for pos,word in pos_word:
+    for docID,words in cleaned_texts:
+        for word in words:
             if word not in lexicon:
                 lexicon[word] = wordID
                 wordID+=1
