@@ -1,16 +1,14 @@
 import numpy as np
 import pickle
 from scipy.sparse.linalg import svds
-
-# Load inverted index
-with open('inverted_index.pkl', 'rb') as f:
-    invIndx = pickle.load(f)
-
-# Step 1: Build Term-Document Matrix
-# Use a sparse matrix for efficiency
 from scipy.sparse import csr_matrix
 
-terms = list(invIndx.keys())  # wordIDs
+# Load inverted index
+with open('/content/drive/My Drive/invIndx.pkl', 'rb') as f:
+    invIndx = pickle.load(f)
+
+
+terms = list(invIndx.keys()) 
 docs = set(docID for term in invIndx.values() for docID in term.keys())
 term_to_idx = {term: idx for idx, term in enumerate(terms)}
 doc_to_idx = {doc: idx for idx, doc in enumerate(docs)}
@@ -22,15 +20,24 @@ for term, doc_data in invIndx.items():
         cols.append(doc_to_idx[doc])
         values.append(len(data["pos"]))  # Frequency as weight
 
-# Convert the sparse matrix to a floating-point data type
 A = csr_matrix((np.array(values, dtype=np.float32), (rows, cols)), shape=(len(terms), len(docs)))
 
 
-# Step 2: Perform SVD
-k = 100  # Number of concepts
-U, S, Vt = svds(A, k=k)
+svd_file = 'svd_matrices.pkl'
+try:
+    with open(svd_file, 'rb') as f:
+        U, S, Vt = pickle.load(f)
+    print("Loaded existing SVD matrices.")
+except FileNotFoundError:
+    print("SVD matrices not found. Computing now...")
+    # Compute SVD
+    k = 100  
+    U, S, Vt = svds(A, k=k)
+    with open(svd_file, 'wb') as f:
+        pickle.dump((U, S, Vt), f)
+    print("SVD matrices computed and saved.")
 
-# Step 3: Organize barrels by concepts
+#Organize barrels by concepts
 barrels = {i: [] for i in range(k)}
 concepts = Vt.T  # Rows are documents, columns are concepts
 for doc_idx, concept_vector in enumerate(concepts):
