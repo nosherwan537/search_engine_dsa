@@ -8,20 +8,20 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
 # Load necessary data
-# with open('lexicon.pkl', 'rb') as f:
-#     lexicon = pickle.load(f)
+with open('lexicon.pkl', 'rb') as f:
+    lexicon = pickle.load(f)
 
 # with open('inverted_index.pkl', 'rb') as f:
 #     invIndx = pickle.load(f)
 
-# with open('barrels_lsi.pkl', 'rb') as f:
-#     barrels = pickle.load(f)
+with open('barrels_lsi.pkl', 'rb') as f:
+    barrels = pickle.load(f)
 
 with open('svd_matrices.pkl', 'rb') as f:
     U, S, Vt = pickle.load(f)
 
 
-# documents_df = pd.read_csv("/content/drive/My Drive/medium_articles.csv")
+documents_df = pd.read_csv("../medium_articles.csv")
 
 
 stop_words = set(stopwords.words('english'))
@@ -76,6 +76,6 @@ def display_results(results, documents_df):
         print(f"Title: {title}\nSnippet: {snippet}\nRelevance Score: {score}\n{'-'*80}")
 
 
-query = "Diplomacy and relations"
+query = "Donald Trump"
 results = search(query)
 display_results(results, documents_df)
