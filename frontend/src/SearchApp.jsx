@@ -48,7 +48,7 @@ export default function ShardSearchEngine() {
               placeholder="Enter your query"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full p-4 pr-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-white/50"
+              className="w-full p-4 pr-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:shadow-md hover:shadow-purple-500 text-white placeholder-white/50  transitions-all duration-300"
             />
             <button
               type="submit"
@@ -61,10 +61,10 @@ export default function ShardSearchEngine() {
 
         {loading && (
           <div className="flex justify-center">
-            <Loader2 className="w-8 h-8 animate-spin" />
+            <Loader2 className="w-8 h-8 animate-spin " />
           </div>
         )}
-        {error && <p className="text-red-400 text-center">{error}</p>}
+        {error && <p className="text-red-400 text-center scale-110">{error}</p>}
 
         <AnimatePresence>
           {results.length > 0 && (
@@ -80,7 +80,7 @@ export default function ShardSearchEngine() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className="bg-white/10 backdrop-blur-md rounded-lg p-6 mb-4 border border-white/20 hover:border-purple-500 transition-colors"
+                  className="bg-white/10 backdrop-blur-md rounded-lg p-6 mb-4 border border-white/20 hover:border-purple-500 hover:scale-105 hover:shadow-md hover:shadow-purple-500 transition-colors"
                 >
                   <h3 className="text-xl font-semibold mb-2">{result.title}</h3>
                   <p className="text-white/80 mb-2">{result.snippet}</p>
@@ -102,7 +102,7 @@ export default function ShardSearchEngine() {
         </AnimatePresence>
 
         {!loading && results.length === 0 && query && (
-          <p className="text-center text-white/60">No results found.</p>
+          <p className="text-center  scale-110 text-white/60">No results found.</p>
         )}
       </div>
     </div>
