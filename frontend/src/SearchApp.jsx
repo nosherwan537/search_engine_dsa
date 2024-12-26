@@ -92,7 +92,7 @@ export default function ShardSearchEngine() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
-              className={`w-full p-5 pr-16 rounded-full ${theme === "bright" ? "bg-white/10 backdrop-blur-md border border-white/30 text-white focus:ring-2 focus:ring-purple-400" : "bg-black/80 backdrop-blur-md border border-black/30 text-purple-500 focus:ring-2 focus:ring-purple-900"} text-lg placeholder-white/50 focus:outline-none transition-all duration-300 shadow-lg hover:shadow-purple-400/30`}
+              className={`w-full p-5 pr-16 rounded-full ${theme === "bright" ? "bg-white/30 backdrop-blur-md border border-white/30 text-purple-500 focus:ring-2 focus:ring-purple-400" : "bg-black/80 backdrop-blur-md border border-black/30 text-purple-500 focus:ring-2 focus:ring-purple-900"} text-lg placeholder-white/50 focus:outline-none transition-all duration-300 shadow-lg hover:shadow-purple-400/30`}
             />
             <button
               type="submit"
@@ -135,7 +135,7 @@ export default function ShardSearchEngine() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className={`p-6 rounded-lg shadow-lg hover:scale-105 transition-all ${theme === "bright" ? "bg-white/20 hover:bg-pink-200/50 hover:shadow-md hover:shadow-pink-400  backdrop-blur-lg border border-white/30" : "bg-black/20 hover:bg-purple-600/30 hover:shadow-md hover:shadow-purple-500 backdrop-blur-lg border border-black/30"}`}
+                  className={`p-6 rounded-lg shadow-lg hover:scale-105 transition-all ${theme === "bright" ? "bg-white/30 hover:bg-pink-200/50 hover:shadow-md hover:shadow-pink-400  backdrop-blur-lg border border-white/30" : "bg-black/20 hover:bg-purple-600/30 hover:shadow-md hover:shadow-purple-500 backdrop-blur-lg border border-black/30"}`}
                 >
                   <h3 className={`text-2xl font-semibold mb-2 ${theme === "bright" ? "text-purple-500" : "text-purple-600"}`}>{result.title}</h3>
                   <p className={`text-lg ${theme === "bright" ? "text-purple-600" : "text-purple-300"} mb-4`}>
@@ -147,11 +147,17 @@ export default function ShardSearchEngine() {
                       Relevance Score: {result.score.toFixed(2)}
                     </span>
                     <a
-                      href="#"
-                      className={`flex items-center ${theme === "bright" ? "text-white/80 hover:text-purple-300" : "text-purple-600 hover:text-black/80"}`}
-                    >
-                      Visit <ExternalLink className="w-5 h-5 ml-1" />
-                    </a>
+  href={result.url}
+  target="_blank"
+  rel="noopener noreferrer"
+  className={`flex items-center ${theme === "bright" ? "text-purple-500 hover:text-purple-300" : "text-purple-600 hover:text-black/80"}`}
+  onClick={(e) => {
+    console.log("Navigating to:", result.url); 
+                 }}
+>
+  Visit <ExternalLink className="w-5 h-5 ml-1" />
+</a>
+
                   </div>
                 </motion.div>
               ))}
