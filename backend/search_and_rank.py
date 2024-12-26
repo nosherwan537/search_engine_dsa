@@ -12,7 +12,9 @@ import pandas as pd
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 import nltk
+import nltk
 from nltk.stem import WordNetLemmatizer
+from collections import defaultdict
 from collections import defaultdict
 
 # Load necessary data

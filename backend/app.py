@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from search_and_rank import search, retrieve_document
 
+
+
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app)  # Enable CORS for cross-origin requests

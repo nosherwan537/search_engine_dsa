@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, Loader2, ExternalLink } from "lucide-react";
+import { Search, Loader2, ExternalLink, Moon, Sun } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 
@@ -8,6 +8,8 @@ export default function ShardSearchEngine() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [searchTriggered, setSearchTriggered] = useState(false); // Track if the search has been triggered
+  const [theme, setTheme] = useState("bright"); // Default to bright theme (formerly dark theme)
 
   const handleSearch = async (e) => {
     e.preventDefault(); // Prevent form submission from reloading the page
@@ -16,6 +18,7 @@ export default function ShardSearchEngine() {
       setError("Please enter a query.");
       return;
     }
+    setSearchTriggered(true); // Set search as triggered
     setLoading(true);
     setError(null);
 
@@ -29,11 +32,25 @@ export default function ShardSearchEngine() {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch(e);
+    }
+  };
+
+  // Function to toggle between bright and dark theme
+  const toggleTheme = () => {
+    setTheme(theme === "bright" ? "dark" : "bright");
+  };
+
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-black text-white p-8 overflow-hidden">
-      
+    <div
+      className={`relative min-h-screen ${theme === "bright" ? "bg-gradient-to-br from-purple-500 via-pink-300 to-purple-700 text-black" : "bg-gradient-to-br from-purple-900 via-indigo-900 to-black text-white"} p-8 overflow-hidden`}
+    >
       <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-purple-700/30 via-transparent to-black/70" />
+        <div
+          className={`absolute top-0 left-0 w-full h-full ${theme === "bright" ? "bg-gradient-to-b from-purple-300/30 via-transparent to-black/70" : "bg-gradient-to-b from-black/30 via-transparent to-purple-500"}`}
+        />
         <motion.div
           className="absolute -top-20 -left-20 w-[400px] h-[400px] bg-purple-500 blur-3xl opacity-30 rounded-full"
           animate={{ x: [0, 100, -100, 0], y: [0, 50, -50, 0] }}
@@ -44,21 +61,29 @@ export default function ShardSearchEngine() {
           animate={{ x: [0, -100, 100, 0], y: [0, -50, 50, 0] }}
           transition={{ duration: 12, repeat: Infinity }}
         />
-        <div className="absolute inset-0 bg-[radial-gradient(circle,_rgba(255,255,255,0.1)_0%,_rgba(0,0,0,0)_80%)]" />
+        <div
+          className={`absolute inset-0 ${theme === "bright" ? "bg-[radial-gradient(circle,_rgba(255,255,255,0.1)_0%,_rgba(0,0,0,0)_80%)]" : "bg-[radial-gradient(circle,_rgba(0,0,0,0.1)_0%,_rgba(255,255,255,0)_80%)]"}`}
+        />
       </div>
 
       <div className="max-w-4xl mx-auto relative z-10">
-       
         <motion.h1
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-7xl font-extrabold text-center mb-10 leading-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400"
+          className={`text-7xl font-extrabold text-center mb-10 leading-tight text-transparent bg-clip-text ${theme === "bright" ? "bg-gradient-to-r from-purple-700 to-pink-400" : "bg-gradient-to-r from-pink-400 to-purple-900"}`}
         >
           SHARD
         </motion.h1>
 
         
+        <button
+          onClick={toggleTheme}
+          className={`absolute top-6 right-6 p-2 rounded-full ${theme === "bright" ? "bg-purple-600 text-white" : "bg-purple-800 text-black"}`}
+        >
+          {theme === "bright" ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
+        </button>
+
         <form onSubmit={handleSearch} className="mb-10">
           <div className="relative">
             <input
@@ -66,37 +91,35 @@ export default function ShardSearchEngine() {
               placeholder="Enter your query"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full p-5 pr-16 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-lg placeholder-white/50 text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all duration-300 shadow-lg hover:shadow-purple-400/30"
+              onKeyDown={handleKeyDown}
+              className={`w-full p-5 pr-16 rounded-full ${theme === "bright" ? "bg-white/10 backdrop-blur-md border border-white/30 text-white focus:ring-2 focus:ring-purple-400" : "bg-black/80 backdrop-blur-md border border-black/30 text-purple-500 focus:ring-2 focus:ring-purple-900"} text-lg placeholder-white/50 focus:outline-none transition-all duration-300 shadow-lg hover:shadow-purple-400/30`}
             />
             <button
               type="submit"
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 p-4 bg-purple-500 rounded-full hover:bg-purple-600 shadow-lg transition-all"
+              className={`absolute right-4 top-1/2 transform -translate-y-1/2 p-4 ${theme === "bright" ? "bg-purple-500" : "bg-purple-800"} rounded-full hover:${theme === "bright" ? "bg-purple-600" : "bg-purple-900"} shadow-lg transition-all`}
             >
               <Search className="w-6 h-6 text-white" />
             </button>
           </div>
         </form>
 
-       
         {loading && (
           <div className="flex justify-center">
-            <Loader2 className="w-10 h-10 text-purple-400 animate-spin" />
+            <Loader2 className={`w-10 h-10 ${theme === "bright" ? "text-purple-400" : "text-purple-600"} animate-spin`} />
           </div>
         )}
 
-        
         {error && (
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="text-red-400 text-center font-semibold"
+            className={`text-center font-semibold ${theme === "bright" ? "text-red-400" : "text-red-600"}`}
           >
             {error}
           </motion.p>
         )}
 
-       
         <AnimatePresence>
           {results.length > 0 && (
             <motion.div
@@ -104,7 +127,7 @@ export default function ShardSearchEngine() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.3 }}
-              className="space-y-4"
+              className={`space-y-4 w-900 backdrop-blur-md ${theme === "bright" ? "bg-white/10 border border-white/20" : "bg-black/10 border border-black/20"} rounded-lg p-6`}
             >
               {results.map((result, index) => (
                 <motion.div
@@ -112,17 +135,20 @@ export default function ShardSearchEngine() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className="bg-gradient-to-r from-purple-800/50 to-indigo-900/50 border border-purple-500/30 p-6 rounded-lg shadow-lg hover:shadow-purple-500/50 hover:scale-105 transition-all"
+                  className={`p-6 rounded-lg shadow-lg hover:scale-105 transition-all ${theme === "bright" ? "bg-white/20 hover:bg-pink-200/50 hover:shadow-md hover:shadow-pink-400  backdrop-blur-lg border border-white/30" : "bg-black/20 hover:bg-purple-600/30 hover:shadow-md hover:shadow-purple-500 backdrop-blur-lg border border-black/30"}`}
                 >
-                  <h3 className="text-2xl font-semibold mb-2 text-purple-200">{result.title}</h3>
-                  <p className="text-lg text-purple-100/80 mb-4">{result.snippet}</p>
+                  <h3 className={`text-2xl font-semibold mb-2 ${theme === "bright" ? "text-purple-500" : "text-purple-600"}`}>{result.title}</h3>
+                  <p className={`text-lg ${theme === "bright" ? "text-purple-600" : "text-purple-300"} mb-4`}>
+                  {result.snippet}
+                  </p>
+
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-purple-400">
+                    <span className={`text-sm ${theme === "bright" ? "text-purple-500" : "text-purple-300"}`}>
                       Relevance Score: {result.score.toFixed(2)}
                     </span>
                     <a
                       href="#"
-                      className="text-purple-400 hover:text-purple-300 flex items-center"
+                      className={`flex items-center ${theme === "bright" ? "text-white/80 hover:text-purple-300" : "text-purple-600 hover:text-black/80"}`}
                     >
                       Visit <ExternalLink className="w-5 h-5 ml-1" />
                     </a>
@@ -133,8 +159,7 @@ export default function ShardSearchEngine() {
           )}
         </AnimatePresence>
 
-        
-        {!loading && results.length === 0 && query && (
+        {!loading && results.length === 0 && query && searchTriggered && (
           <p className="text-center text-white/60 text-lg">
             No results found. Please refine your search.
           </p>
