@@ -2,8 +2,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from search_and_rank import search, retrieve_document
 
-
-
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app)  # Enable CORS for cross-origin requests
@@ -29,11 +27,12 @@ def handle_search():
         # Format the output with document details
         output = []
         for doc_id, score in results:
-            doc_details = retrieve_document(doc_id)  # Get title and snippet for the document
+            doc_details = retrieve_document(doc_id)  # Get title, snippet, and url for the document
             output.append({
                 "title": doc_details["title"],
                 "snippet": doc_details["snippet"],
-                "score": round(score, 4)  # Round the score for better readability
+                "score": round(score, 4),  # Round the score for better readability
+                "url": doc_details.get("url", "")  # Assuming URL is stored in the document details
             })
 
         return jsonify({"results": output}), 200
