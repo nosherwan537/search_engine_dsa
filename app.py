@@ -12,35 +12,24 @@ def handle_search():
         # Parse the incoming JSON request
         data = request.json
         query = data.get('query', '').strip()
-        print(f"Received query: {query}")  # Log incoming query
-
         if not query:
             return jsonify({"error": "No query provided"}), 400
 
         # Perform the search using the updated implementation
         results = search(query)
-        print(f"Search results: {results}")  # Log search results
-
         if not results:
-            return jsonify({"results": [], "message": "No results found for the query."}), 200
+            return jsonify({"results": [], "message": "No results found for the query."})
 
         # Format the output with document details
         output = []
-        for doc_id, score in results:
-            doc_details = retrieve_document(doc_id)  # Get title and snippet for the document
+        for result in results:
             output.append({
-                "title": doc_details["title"],
-                "snippet": doc_details["snippet"],
-                "score": round(score, 4)  # Round the score for better readability
+                "title": result["title"],
+                "snippet": result["snippet"],
+                "score": round(result["score"], 4)  # Round the score for better readability
             })
 
         return jsonify({"results": output}), 200
-
-    except Exception as e:
-        # Handle any unexpected errors
-        print(f"Error: {e}")  # Log error details
-        return jsonify({"error": "An error occurred during the search process.", "details": str(e)}), 500
-
 
     except Exception as e:
         # Handle any unexpected errors

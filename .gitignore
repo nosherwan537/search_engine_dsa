@@ -6,6 +6,8 @@ medium_articles.csv
 __pycache__/
 *.pyc
 *.pyo
+.env
+search_and_rank.py
 
 # Ignore the pickle files
 *.pkl
