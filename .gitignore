@@ -13,6 +13,7 @@ search_and_rank.py
 *.pkl
 
 search.py
+src.py
 validate_barrel.py
 # Ignore other system-specific or IDE-specific files
 .DS_Store  # macOS

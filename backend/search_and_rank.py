@@ -44,22 +44,22 @@ stop_words = set(stopwords.words('english'))
 lemmatizer = WordNetLemmatizer()
 
 # Load Gemini API key
-load_dotenv()
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+# load_dotenv()
+# genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
-# Configure Gemini model
-generation_config = {
-    "temperature": 0.7,
-    "top_p": 0.95,
-    "top_k": 40,
-    "max_output_tokens": 256,
-    "response_mime_type": "text/plain",
-}
+# # Configure Gemini model
+# generation_config = {
+#     "temperature": 0.7,
+#     "top_p": 0.95,
+#     "top_k": 40,
+#     "max_output_tokens": 256,
+#     "response_mime_type": "text/plain",
+# }
 
-model = genai.GenerativeModel(
-    model_name="gemini-1.5-pro",
-    generation_config=generation_config,
-)
+# model = genai.GenerativeModel(
+#     model_name="gemini-1.5-pro",
+#     generation_config=generation_config,
+# )
 
 # Pre-fit NearestNeighbors model once
 nbrs = NearestNeighbors(n_neighbors=10, metric='cosine').fit(Vt.T)
@@ -86,21 +86,21 @@ def retrieve_nearest_docs(query_tokens, top_n=10):
     return indices[0]
 
 #  Refine query for a specific dataset focusing on semantics and logic
-def expand_query_with_llm(query):
-    try:
-        chat_session = model.start_chat(history=[])
-        llm_response = chat_session.send_message(
-            f"Refine this search query by expanding it with more specific keywords, related terms, and concepts that enhance its meaning and relevance to the topic, without providing explanations. Focus on enhancing the searchability of the query based on its context, query is: {query}"
-        )
-        refined_query = llm_response.text.strip()
-        return refined_query
-    except Exception as e:
-        print(f"Gemini API Error: {e}")
-        return query
+# def expand_query_with_llm(query):
+#     try:
+#         chat_session = model.start_chat(history=[])
+#         llm_response = chat_session.send_message(
+#             f"Refine this search query by expanding it with more specific keywords, related terms, and concepts that enhance its meaning and relevance to the topic, without providing explanations. Focus on enhancing the searchability of the query based on its context, query is: {query}"
+#         )
+#         refined_query = llm_response.text.strip()
+#         return refined_query
+#     except Exception as e:
+#         print(f"Gemini API Error: {e}")
+#         return query
 
 def search(query, top_n=10):
-    expanded_query = expand_query_with_llm(query)
-    query_tokens = preprocess_query(expanded_query)
+    # expanded_query = expand_query_with_llm(query)
+    query_tokens = preprocess_query(query)
 
     # BM25 Scoring
     bm25_scores = bm25.get_scores(query_tokens)
