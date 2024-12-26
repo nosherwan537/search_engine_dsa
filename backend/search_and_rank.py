@@ -12,10 +12,9 @@ import pandas as pd
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 import nltk
-import nltk
 from nltk.stem import WordNetLemmatizer
 from collections import defaultdict
-from collections import defaultdict
+from sklearn.decomposition import PCA
 
 # Load necessary data
 with open('bm25_model.pkl', 'rb') as f:
@@ -33,11 +32,16 @@ with open('svd_matrices.pkl', 'rb') as f:
 with open('term_vectors.pkl', 'rb') as f:
     term_vectors = pickle.load(f)
 
+# Load Medium articles CSV
 documents_df = pd.read_csv("../medium_articles.csv")
+
+# Ensure the DataFrame contains the required columns
+required_columns = ['title', 'text', 'url']
+if not all(col in documents_df.columns for col in required_columns):
+    raise ValueError(f"The CSV file must contain the following columns: {', '.join(required_columns)}")
 
 stop_words = set(stopwords.words('english'))
 lemmatizer = WordNetLemmatizer()
-
 
 # Load Gemini API key
 load_dotenv()
@@ -81,7 +85,6 @@ def retrieve_nearest_docs(query_tokens, top_n=10):
 
     return indices[0]
 
-
 #  Refine query for a specific dataset focusing on semantics and logic
 def expand_query_with_llm(query):
     try:
@@ -94,8 +97,6 @@ def expand_query_with_llm(query):
     except Exception as e:
         print(f"Gemini API Error: {e}")
         return query
-
-
 
 def search(query, top_n=10):
     expanded_query = expand_query_with_llm(query)
@@ -124,9 +125,13 @@ def search(query, top_n=10):
 
 def retrieve_document(doc_id):
     try:
-        title = str(documents_df.iloc[doc_id]["title"])
-        text = str(documents_df.iloc[doc_id]["text"])
+        row = documents_df.iloc[doc_id]
+        title = str(row["title"])
+        text = str(row["text"])
+        url = str(row["url"])
         snippet = " ".join(text.split()[:50])
-        return {"title": title, "snippet": snippet}
+        return {"title": title, "snippet": snippet, "url": url}
     except (IndexError, ValueError, KeyError):
-        return {"title": f"Document {doc_id}", "snippet": "Snippet unavailable."}
+        return {"title": f"Document {doc_id}", "snippet": "Snippet unavailable.", "url": ""}
+
+
