@@ -43,12 +43,6 @@ def handle_search():
         print(f"Error: {e}")  # Log error details
         return jsonify({"error": "An error occurred during the search process.", "details": str(e)}), 500
 
-
-    except Exception as e:
-        # Handle any unexpected errors
-        return jsonify({"error": "An error occurred during the search process.", "details": str(e)}), 500
-
-
 if __name__ == '__main__':
     # Run the app in debug mode
     app.run(debug=True)
