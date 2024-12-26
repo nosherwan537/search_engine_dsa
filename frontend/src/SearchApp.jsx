@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Search, Loader2, ExternalLink, Moon, Sun } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
+import ShardLogo from "/src/shard.png";
 
 export default function ShardSearchEngine() {
   const [query, setQuery] = useState("");
@@ -99,14 +100,19 @@ export default function ShardSearchEngine() {
       </div>
 
       <div className="max-w-4xl mx-auto relative z-10">
-        <motion.h1
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className={`text-7xl font-extrabold text-center mb-10 leading-tight text-transparent bg-clip-text transition-all duration-5000 ${theme === "bright" ? "bg-gradient-to-r from-purple-700 to-pink-400" : "bg-gradient-to-r from-pink-400 to-purple-900"}`}
-        >
-          SHARD
-        </motion.h1>
+      <motion.div 
+      initial={{ opacity: 0, y: -50 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      transition={{ duration: 0.5 }} 
+      className="flex justify-center mb-10"
+    >
+      <img 
+        src={ShardLogo} 
+        alt="Shard Logo" 
+        className="w-64 h-64 object-contain" // Adjust size as needed
+      />
+    </motion.div>
+    
 
         <button
           onClick={toggleTheme}
