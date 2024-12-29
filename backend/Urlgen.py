@@ -1,9 +1,9 @@
 import pandas as pd
 import pickle
 
-documents_csv_path = "../medium_articles.csv"
-cleaned_texts_pkl_path = "cleaned_texts.pkl"
-urls_pkl_path = "urls.pkl"
+documents_csv_path = r"D:\search_engine_dsa\search_engine_dsa\medium_articles.csv"
+cleaned_texts_pkl_path = r"D:\search_engine_dsa\search_engine_dsa\cleaned_texts.pkl"
+urls_pkl_path = r"D:\search_engine_dsa\search_engine_dsa\urls.pkl"
 
 
 documents_df = pd.read_csv(documents_csv_path)
