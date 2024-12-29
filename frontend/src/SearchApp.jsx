@@ -12,6 +12,11 @@ export default function ShardSearchEngine() {
   const [searchTriggered, setSearchTriggered] = useState(false); // Track if the search has been triggered
   const [theme, setTheme] = useState("bright"); // Default to bright theme
   const [suggestions, setSuggestions] = useState([]); // State for search suggestions
+  const [isAddClicked, setIsAddClicked] = useState(false);
+  const [articleId, setArticleId] = useState(""); // Store article ID input
+
+
+
 
   // Fetch search suggestions when query changes
   useEffect(() => {
@@ -58,7 +63,7 @@ export default function ShardSearchEngine() {
     }
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown1 = (e) => {
     if (e.key === "Enter") {
       handleSearch(e);
     }
@@ -76,7 +81,39 @@ export default function ShardSearchEngine() {
     setSearchTriggered(false); // Reset search trigger status
   };
 
+  // Handle Add button click
+  const handleAddClick = () => {
+    setIsAddClicked((prev) => !prev); // Toggle visibility of the text box
+    setArticleId(""); // Clear the article ID when toggling
+    setError(null); // Reset error when button is clicked
+  };
+
+  const handleArticleIdChange = (e) => {
+    setArticleId(e.target.value); // Update article ID as the user types
+  };
+
+  const handleKeyDown = async (e) => {
+    if (e.key === "Enter" && articleId.trim()) {
+      try {
+        // Send article ID to the backend
+        const response = await axios.post("http://127.0.0.1:5000/add_article", { articleId });
+        console.log("Response:", response.data);
+        setIsAddClicked(false); // Hide the text box after submission
+      } catch (err) {
+        console.error("Error adding article:", err);
+        setError("Failed to add article. Please try again.");
+      }
+    }
+  };
+
+  // Handle Maintenance button click
+  const handleMaintenanceClick = () => {
+    console.log("Maintenance button clicked");
+    navigate("/maintenance"); // Navigate to the maintenance page
+  };
+
   return (
+    
     <div
       className={`relative min-h-screen ${theme === "bright" ? "bg-gradient-to-br from-purple-500 via-pink-300 to-purple-700 text-black" : "bg-gradient-to-br from-purple-900 via-indigo-900 to-black text-white"} p-8 overflow-hidden`}
     >
@@ -100,19 +137,18 @@ export default function ShardSearchEngine() {
       </div>
 
       <div className="max-w-4xl mx-auto relative z-10">
-      <motion.div 
-      initial={{ opacity: 0, y: -50 }} 
-      animate={{ opacity: 1, y: 0 }} 
-      transition={{ duration: 0.5 }} 
-      className="flex justify-center mb-10"
-    >
-      <img 
-        src={ShardLogo} 
-        alt="Shard Logo" 
-        className="w-64 h-64 object-contain" // Adjust size as needed
-      />
-    </motion.div>
-    
+        <motion.div 
+          initial={{ opacity: 0, y: -50 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.5 }} 
+          className="flex justify-center mb-10"
+        >
+          <img 
+            src={ShardLogo} 
+            alt="Shard Logo" 
+            className="w-64 h-64 object-contain" 
+          />
+        </motion.div>
 
         <button
           onClick={toggleTheme}
@@ -128,7 +164,7 @@ export default function ShardSearchEngine() {
               placeholder="Enter your query"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={handleKeyDown}
+              onKeyDown={handleKeyDown1}
               className={`w-full p-5 pr-16 rounded-full ${theme === "bright" ? "bg-white/30 backdrop-blur-md border border-white/30 text-purple-500 focus:ring-2 focus:ring-purple-400" : "bg-black/80 backdrop-blur-md border border-black/30 text-purple-500 focus:ring-2 focus:ring-purple-900"} text-lg placeholder-white/50 focus:outline-none transition-all duration-300 shadow-lg hover:shadow-purple-400/30`}
             />
             <button
@@ -156,8 +192,6 @@ export default function ShardSearchEngine() {
             </div>
           )}
         </form>
-
-        {/* Display suggestions */}
 
         {loading && (
           <div className="flex justify-center">
@@ -223,6 +257,45 @@ export default function ShardSearchEngine() {
           </p>
         )}
       </div>
+
+     {/* Add and Maintenance Buttons */}
+<div className="absolute top-6 right-6 space-x-4 flex">
+     {/* Add Button */}
+     <button
+        onClick={handleAddClick}
+        className={`px-6 py-3 rounded-full ${theme === "bright" ? "bg-purple-500 text-white" : "bg-purple-800 text-black"} shadow-lg transition-all duration-300 hover:bg-purple-600`}
+      >
+        Add
+      </button>
+
+      {/* Display Text Box when Add button is clicked */}
+      {isAddClicked && (
+        <div className="mt-4">
+          <input
+            type="text"
+            placeholder="Add Article ID"
+            value={articleId}
+            onChange={handleArticleIdChange}
+            onKeyDown={handleKeyDown} // Trigger request when Enter is pressed
+            className={`w-full px-5 py-3 rounded-full ${theme === "bright" ? "bg-white/30 text-purple-500" : "bg-black/80 text-purple-500"} border border-white/30 backdrop-blur-md focus:outline-none`}
+          />
+        </div>
+      )}
+
+    
+   {/* Maintenance Button */}
+   <button
+        onClick={handleMaintenanceClick}
+        className={`px-6 py-3 rounded-full ${theme === "bright" ? "bg-purple-500 text-white" : "bg-purple-800 text-black"} shadow-lg transition-all duration-300 hover:bg-purple-600 hover:shadow-md hover:shadow-purple-500`}
+      >
+        Maintenance
+      </button>
+
+</div>
+ 
+   
+    
     </div>
+    
   );
 }
