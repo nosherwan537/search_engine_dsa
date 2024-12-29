@@ -106,11 +106,6 @@ export default function ShardSearchEngine() {
     }
   };
 
-  // Handle Maintenance button click
-  const handleMaintenanceClick = () => {
-    console.log("Maintenance button clicked");
-    navigate("/maintenance"); // Navigate to the maintenance page
-  };
 
   return (
     
@@ -283,13 +278,6 @@ export default function ShardSearchEngine() {
       )}
 
     
-   {/* Maintenance Button */}
-   <button
-        onClick={handleMaintenanceClick}
-        className={`px-6 py-3 rounded-full ${theme === "bright" ? "bg-purple-500 text-white" : "bg-purple-800 text-black"} shadow-lg transition-all duration-300 hover:bg-purple-600 hover:shadow-md hover:shadow-purple-500`}
-      >
-        Maintenance
-      </button>
 
 </div>
  

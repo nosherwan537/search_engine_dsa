@@ -11,12 +11,12 @@ nltk.download('punkt_tab')
 nltk.download('wordnet')
 nltk.download('omw-1.4')
 
-df=pd.read_csv(r"D:\search_engine_dsa\search_engine_dsa\medium_articles.csv")
+df=pd.read_csv(r"D:\search_engine_dsa\search_engine_dsa\medium_articles.csv") # Load Medium articles CSV
 texts=df['text'].fillna("").tolist()
 stop_words = set(stopwords.words('english'))
 lemmatizer = WordNetLemmatizer()
 
-def clean_text(docID,text):
+def clean_text(docID,text): # Clean text
     text =re.sub(r'[^\w\s]','',text)
     tokens=word_tokenize(text.lower())
     cleaned_tokens = [
@@ -26,7 +26,7 @@ def clean_text(docID,text):
 
 cleaned_texts=[clean_text(docID,text) for docID,text in enumerate(texts)]
 
-with open('../cleaned_texts.pkl','wb') as f:
+with open('../cleaned_texts.pkl','wb') as f: # Save cleaned texts
     pickle.dump(cleaned_texts,f)
 
-print("Preprocessing done!")
+print("Preprocessing done!") 
