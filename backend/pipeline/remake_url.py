@@ -19,4 +19,4 @@ def remake_url(self):
     with open(self.urls_path, 'wb') as f:
         pickle.dump(url_mapping, f)
 
-    print(f"URLs and document IDs have been successfully saved to {urls_pkl_path}")
+    print(f"URLs and document IDs have been successfully saved to {self.urls_pkl_path}")

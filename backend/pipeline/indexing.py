@@ -14,8 +14,10 @@ def index(self,id_token_tuples):
     # Load existing indices
     with open(self.forward_index_path, "rb") as f:
         fwdIndxMain = pickle.load(f)
+    print("opened forward index")
     with open(self.inverted_index_path, "rb") as f:
         invrtdIndx = pickle.load(f)
+    print("opened inverted index")
     with open(self.lexicon_path, "rb") as f:
         lexicon = pickle.load(f)
 

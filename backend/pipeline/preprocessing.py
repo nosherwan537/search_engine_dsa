@@ -31,7 +31,7 @@ def preprocess(self, docs):
 
     for docID, doc in enumerate(docs):
         text = doc.get("text", "")
-        id_token_tuple = self.clean_text(docID, text)
+        id_token_tuple = clean_text(docID, text)
         cleaned_texts.append(id_token_tuple)
         id_token_tuples.append(id_token_tuple)
 
