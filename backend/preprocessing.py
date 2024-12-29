@@ -11,7 +11,7 @@ nltk.download('punkt_tab')
 nltk.download('wordnet')
 nltk.download('omw-1.4')
 
-df=pd.read_csv("../medium_articles.csv")
+df=pd.read_csv(r"D:\search_engine_dsa\search_engine_dsa\medium_articles.csv")
 texts=df['text'].fillna("").tolist()
 stop_words = set(stopwords.words('english'))
 lemmatizer = WordNetLemmatizer()
