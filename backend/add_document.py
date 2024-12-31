@@ -6,7 +6,7 @@ dotenv.load_dotenv()
 class Pipeline:
     def __init__(self,ids):
         self.ids = ids
-        self.file_path = r"D:\search_engine_dsa\search_engine_dsa\medium_articles.csv"
+        self.file_path = "../medium_articles.csv"
         self.lexicon_path = 'lexicon.pkl'
         self.forward_index_path = 'forward_index.pkl'
         self.inverted_index_path = 'inverted_index.pkl'

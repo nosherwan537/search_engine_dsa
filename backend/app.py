@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from threading import Thread
 from search_and_rank import search, retrieve_document
+from script import is_trigger_maintenance
+from maintenance_mode import perform_maintenance
 import logging
 
 # Initialize Flask app
@@ -111,6 +114,12 @@ search_terms = [
     "gardening",         
 ]
 
+
+def perform_maintenance_in_thread():
+    logging.info("Maintenance mode triggered. Performing maintenance tasks...")
+    perform_maintenance()
+
+
 @app.route('/search_suggestions', methods=['GET'])
 def search_suggestions():
     try:
@@ -132,6 +141,19 @@ def search_suggestions():
     except Exception as e:
         logging.error(f"Unexpected error: {e}")
         return jsonify({"error": "An error occurred while fetching suggestions.", "details": str(e)}), 500
+
+
+@app.route('/maintenance_status', methods=['GET'])
+def maintenance_status():
+    try:
+        # Check if maintenance mode is triggered
+        if is_trigger_maintenance():
+            return jsonify({"maintenance": True}), 200
+        else:
+            return jsonify({"maintenance": False}), 200
+    except Exception as e:
+        logging.error(f"Unexpected error: {e}")
+        return jsonify({"error": "An error occurred while checking maintenance status.", "details": str(e)}), 500
 
 
 @app.route('/search', methods=['POST'])
@@ -177,5 +199,11 @@ def handle_search():
         return jsonify({"error": "An error occurred during the search process.", "details": str(e)}), 500
 
 if __name__ == '__main__':
+    # Check if maintenance mode is triggered
+    if is_trigger_maintenance():
+        # Perform maintenance in a separate thread to avoid blocking the main server
+        maintenance_thread = Thread(target=perform_maintenance_in_thread)
+        maintenance_thread.start()
+    
     # Run the app in debug mode
     app.run(debug=True)
