@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from threading import Thread
+# from threading import Thread
 from search_and_rank import search, retrieve_document
-from script import is_trigger_maintenance
+from script import is_trigger_maintenance, new_doc
 from maintenance_mode import perform_maintenance
 import logging
 
@@ -154,6 +154,30 @@ def maintenance_status():
     except Exception as e:
         logging.error(f"Unexpected error: {e}")
         return jsonify({"error": "An error occurred while checking maintenance status.", "details": str(e)}), 500
+
+
+@app.route('/add_article', methods=['POST'])
+def add_article():
+    try:
+        # Parse the incoming JSON request
+        data = request.json
+        article_id = data.get('articleId', '').strip()
+        
+        if not article_id:
+            return jsonify({"error": "No article ID provided"}), 400
+        
+        # Call the new_doc function to add the article ID
+        new_doc(article_id)
+        
+        # Return a success response
+        return jsonify({"message": "Article added successfully."}), 200
+
+    except KeyError as e:
+        logging.error(f"Missing expected key: {e}")
+        return jsonify({"error": f"Missing expected key: {e}"}), 400
+    except Exception as e:
+        logging.error(f"Unexpected error: {e}")
+        return jsonify({"error": "An error occurred while adding the article.", "details": str(e)}), 500
 
 
 @app.route('/search', methods=['POST'])

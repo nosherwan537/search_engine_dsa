@@ -105,10 +105,27 @@ export default function ShardSearchEngine() {
     };
 
     // Handle Add button click
-    const handleAddClick = () => {
+    const handleAddClick = async(e) => {
+        if(isAddClicked) {
+            if(articleId.trim()) {
+                try {
+                    // Send article ID to the backend
+                    const response = await axios.post(
+                        "http://127.0.0.1:5000/add_article",
+                        { articleId }
+                    );
+                    console.log("Response:", response.data);
+                    setIsAddClicked(false); // Hide the text box after submission
+                } catch (err) {
+                    console.error("Error adding article:", err);
+                    setError("Failed to add article. Please try again.");
+                }
+            }
+        }
         setIsAddClicked((prev) => !prev); // Toggle visibility of the text box
-        setArticleId(""); // Clear the article ID when toggling
-        setError(null); // Reset error when button is clicked
+        setArticleId(""); // Clear article ID input
+        setError(null); // Clear any previous errors
+        
     };
 
     const handleArticleIdChange = (e) => {
@@ -131,6 +148,9 @@ export default function ShardSearchEngine() {
             }
         }
     };
+
+    
+
 
     return (
         <div
